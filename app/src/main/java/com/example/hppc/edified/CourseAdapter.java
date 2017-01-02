@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 public class CourseAdapter extends RecyclerView.Adapter {
 
-    String[] course = {"OOP with JAVA", "Computer Secutiry", "Compiler Design"};
+    String[] course = {"OOP with JAVA", "Computer Security", "Compiler Design"};
     String[] category = {"Computer Science", "Computer Science", "Computer Science"};
 
     @Override
@@ -26,7 +26,7 @@ public class CourseAdapter extends RecyclerView.Adapter {
 
         CourseHolder courseHolder = (CourseHolder) holder;
         courseHolder.getCourse_name().setText(course[position]);
-        courseHolder.getCourse_category().setText(course[position]);
+        courseHolder.getCourse_category().setText(category[position]);
 
     }
 
