@@ -42,7 +42,7 @@
             android:layout_below="@+id/ccategory"
             android:fontFamily="sans-serif-medium"
             android:text="Enroll Now"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
     </RelativeLayout>
