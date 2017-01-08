@@ -24,4 +24,5 @@
     </string>
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_signup">SignupActivity</string>
+    <string name="title_activity_quiz_fragment">QuizFragment</string>
 </resources>

@@ -6,7 +6,7 @@ package com.example.hppc.edified;
 
 public class Course {
 
-    String courseName, courseCategory, courseDesc;
-    Boolean enrolled;
+    private String courseName, courseCategory, courseDesc;
+    private Boolean enrolled;
 
 }
