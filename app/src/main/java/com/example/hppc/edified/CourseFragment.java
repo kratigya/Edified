@@ -17,14 +17,13 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class CourseFragment extends Fragment {
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private RecyclerView courseRecyclerView;
     private RecyclerView.Adapter courseRecAdapter;
     private RecyclerView.LayoutManager courseLayoutManager;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -71,7 +70,7 @@ public class CourseFragment extends Fragment {
         courseRecyclerView.setHasFixedSize(true);
         courseLayoutManager = new LinearLayoutManager(getActivity());
         courseRecyclerView.setLayoutManager(courseLayoutManager);
-        courseRecAdapter = new CourseAdapter();
+        courseRecAdapter = new CourseAdapter(getContext());
         courseRecyclerView.setAdapter(courseRecAdapter);
 
         return view;

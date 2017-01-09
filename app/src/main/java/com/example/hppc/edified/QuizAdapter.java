@@ -32,7 +32,7 @@ public class QuizAdapter extends RecyclerView.Adapter {
         quizHolder.getScore().setText(score[position]);
         ColorGenerator generator = ColorGenerator.MATERIAL;
         int color = generator.getRandomColor();
-        TextDrawable drawable = TextDrawable.builder().buildRound("Q " + position, color);
+        TextDrawable drawable = TextDrawable.builder().buildRound("Q" + (position + 1), color);
         quizHolder.getImage().setImageDrawable(drawable);
     }
 

@@ -1,5 +1,6 @@
 package com.example.hppc.edified;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -151,8 +152,10 @@ public class EmailPasswordActivity extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithEmail:failed", task.getException());
                             Toast.makeText(EmailPasswordActivity.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Intent intent = new Intent(EmailPasswordActivity.this, MainActivity.class);
+                            startActivity(intent);
                         }
-
                     }
                 });
         // [END sign_in_with_email]
