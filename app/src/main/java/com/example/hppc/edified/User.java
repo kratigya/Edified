@@ -6,7 +6,7 @@ package com.example.hppc.edified;
 
 public class User {
 
-    private String firstName, lastName, emailAddress, password;
+    private String firstName, lastName, emailAddress;
 
     public String getFirstName() {
         return firstName;
@@ -30,13 +30,5 @@ public class User {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }
