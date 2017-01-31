@@ -17,12 +17,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements FireBaseConn {
 
     private static final String TAG = "EmailPassword";
     private EditText fname, lname, email, passwd, confirm_passwd;
     private Button login, register;
-    private FirebaseAuth mAuth;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -73,7 +72,6 @@ public class LoginActivity extends AppCompatActivity {
 //            }
 //        });
 
-        mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
