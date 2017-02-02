@@ -25,4 +25,14 @@
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_signup">SignupActivity</string>
     <string name="title_activity_quiz_fragment">QuizFragment</string>
+    <string name="title_activity_add_course">AddCourse</string>
+
+    <string-array name="categories">
+        <item>Arts and Humanities</item>
+        <item>Business</item>
+        <item>Computer Science</item>
+        <item>Cyber Security</item>
+        <item>Data Science</item>
+        <item>Life Sciences</item>
+    </string-array>
 </resources>

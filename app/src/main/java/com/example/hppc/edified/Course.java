@@ -9,20 +9,19 @@ public class Course implements FireBaseConn {
     private static int courseID = 0;
     private String courseName, courseCategory, courseDesc;
 
-    void Course(String name, String category, String desc) {
-        this.setCourseCategory(category);
-        this.setCourseDesc(desc);
-        this.setCourseName(name);
+    Course(String name, String category, String desc) {
+        courseName = name;
+        courseCategory = category;
+        courseDesc = desc;
         courseID++;
-        this.setCourseID();
     }
 
-    void addCourse() {
-        mDatabase.child("courses").child(this.getid()).setValue(this);
-    }
-
-    String getid() {
+    public String getid() {
         return Integer.toString(courseID);
+    }
+
+    public void addCourse(){
+        mDatabase.child("courses").child(getid()).setValue(this);
     }
 
     public void setCourseName(String courseName) {
@@ -38,6 +37,18 @@ public class Course implements FireBaseConn {
     }
 
     public void setCourseID() {
-        this.courseID = courseID;
+        this.courseID = courseID++;
+    }
+
+    public String getCourseCategory() {
+        return courseCategory;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public String getCourseDesc() {
+        return courseDesc;
     }
 }
