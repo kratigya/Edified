@@ -5,13 +5,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,14 +22,15 @@ import android.view.ViewGroup;
  * Use the {@link CourseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CourseFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
+public class CourseFragment extends Fragment implements FireBaseConn {
+    private static final String COURSES_CHILD = "courses";
     private static final String ARG_PARAM2 = "param2";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private RecyclerView courseRecyclerView;
-    private RecyclerView.Adapter courseRecAdapter;
     private RecyclerView.LayoutManager courseLayoutManager;
+    private FirebaseRecyclerAdapter<Course, CourseHolder> courseAdapter;
+    private FragmentTransaction fragmentTransaction;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -50,7 +54,6 @@ public class CourseFragment extends Fragment {
     public static CourseFragment newInstance(String param1, String param2) {
         CourseFragment fragment = new CourseFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -60,7 +63,6 @@ public class CourseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -71,17 +73,48 @@ public class CourseFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_course, container, false);
         courseRecyclerView = (RecyclerView) view.findViewById(R.id.courseRecView);
-        courseRecyclerView.setHasFixedSize(true);
         courseLayoutManager = new LinearLayoutManager(getActivity());
         courseRecyclerView.setLayoutManager(courseLayoutManager);
-        courseRecAdapter = new CourseAdapter(getContext());
-        courseRecyclerView.setAdapter(courseRecAdapter);
+
+        courseAdapter = new FirebaseRecyclerAdapter<Course, CourseHolder>(
+                Course.class,
+                R.layout.course_card,
+                CourseHolder.class,
+                mDatabase.child(COURSES_CHILD)) {
+
+            @Override
+            protected Course parseSnapshot(DataSnapshot snapshot) {
+                Course course = super.parseSnapshot(snapshot);
+                if (course != null) {
+                    course.setCourseID(snapshot.getKey());
+                }
+                return course;
+            }
+
+            @Override
+            protected void populateViewHolder(CourseHolder viewHolder, Course model, int position) {
+
+                viewHolder.getCourse_name().setText(model.getCourseName());
+                viewHolder.getCourse_category().setText(model.getCourseCategory());
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fragmentTransaction = getFragmentManager().beginTransaction();
+                        QuizFragment quizFragment = new QuizFragment();
+                        fragmentTransaction.replace(R.id.fragment1, quizFragment, "QuizList");
+                        fragmentTransaction.commit();
+                    }
+                });
+            }
+        };
+
+        courseRecyclerView.setAdapter(courseAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(),AddCourse.class);
+                Intent intent = new Intent(getContext(), AddCourse.class);
                 startActivity(intent);
             }
         });

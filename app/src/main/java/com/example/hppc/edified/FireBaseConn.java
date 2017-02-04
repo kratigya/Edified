@@ -10,6 +10,5 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public interface FireBaseConn {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    ;
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 }

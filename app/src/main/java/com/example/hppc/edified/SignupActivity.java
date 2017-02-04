@@ -1,5 +1,6 @@
 package com.example.hppc.edified;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -86,11 +87,12 @@ public class SignupActivity extends AppCompatActivity implements FireBaseConn {
                             FirebaseUser user = mAuth.getCurrentUser();
 
                             mDatabase.child("users").child(user.getUid()).setValue(newu);
+
+                            Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                            startActivity(intent);
                         }
                     }
                 });
         // [END create_user_with_email]
     }
-
-
 }
