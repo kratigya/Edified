@@ -89,4 +89,13 @@
         android:layout_marginTop="24dp"
         android:visibility="visible" />
 
+    <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/fb_sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/sign_in_button"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="17dp"
+        android:visibility="visible"
+        facebook:com_facebook_login_text="Sign Up With Facebook" />
 </RelativeLayout>

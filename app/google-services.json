@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "300842435036",
+    "firebase_url": "https://edified-a3504.firebaseio.com",
+    "project_id": "edified-a3504",
+    "storage_bucket": "edified-a3504.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:300842435036:android:a908b89f95dfc438",
+        "android_client_info": {
+          "package_name": "com.example.hppc.edified"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "300842435036-rnb68kidfv96bsli0jmvdphi82itfbah.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hppc.edified",
+            "certificate_hash": "E4D45C8E40E4264D8F9266F077979B7208F6F288"
+          }
+        },
+        {
+          "client_id": "300842435036-2fn1809bks9fm5bkh65ou3lu7at6s8g0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hppc.edified",
+            "certificate_hash": "EBDAD7E8C44024A916C0E6E96B6C8D7FD7A41014"
+          }
+        },
+        {
+          "client_id": "300842435036-fq3i5ltg88su0b3d6cm6r982draced0k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUzFS2L-LaDF0My9snf8p-BabRau3t8Uw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "300842435036-fq3i5ltg88su0b3d6cm6r982draced0k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

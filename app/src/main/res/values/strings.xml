@@ -26,6 +26,7 @@
     <string name="title_activity_signup">SignupActivity</string>
     <string name="title_activity_quiz_fragment">QuizFragment</string>
     <string name="title_activity_add_course">AddCourse</string>
+    <string name="facebook_app_id">1218800654901240</string>
 
     <string-array name="categories">
         <item>Arts and Humanities</item>
@@ -39,4 +40,5 @@
     <string name="title_activity_splash_screen">SplashScreen</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_course_description">CourseDescription</string>
 </resources>
