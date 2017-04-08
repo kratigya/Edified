@@ -38,6 +38,8 @@ public class CourseDescription extends AppCompatActivity {
         setContentView(R.layout.activity_course_description);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Intent intent = getIntent();
+        Course crs = intent.getExtras().getParcelable("Course");
 
         mAuth = FirebaseAuth.getInstance();
 

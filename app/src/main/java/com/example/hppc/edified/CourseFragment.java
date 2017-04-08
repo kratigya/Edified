@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -41,6 +43,7 @@ public class CourseFragment extends Fragment implements FireBaseConn {
     private ValueEventListener mUserListener;
     private User usr;
     private String role;
+    private ArrayList<Course> courseList = new ArrayList<>();
 
 //    private OnFragmentInteractionListener mListener;
 
@@ -120,30 +123,41 @@ public class CourseFragment extends Fragment implements FireBaseConn {
                 Course course = super.parseSnapshot(snapshot);
                 if (course != null) {
                     course.setCourseID(snapshot.getKey());
+                    courseList.add(course);
                 }
                 return course;
             }
 
             @Override
             protected void populateViewHolder(CourseHolder viewHolder, Course model, int position) {
-                crs = model;
+
                 viewHolder.getCourse_name().setText(model.getCourseName());
                 viewHolder.getCourse_category().setText(model.getCourseCategory());
-                viewHolder.getEnroll().setOnClickListener(new View.OnClickListener() {
+            }
+
+            @Override
+            public CourseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                final CourseHolder courseHolder = super.onCreateViewHolder(parent, viewType);
+                courseHolder.setOnClickListener(new CourseHolder.ClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        FirebaseDatabase.getInstance().getReference()
-                                .child(getString(R.string.USERS)).child(user.getUid()).child("enrolledCourses").push().setValue(crs);
-                    }
-                });
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                    public void onItemClick(View view, int position) {
+                        crs = courseList.get(position);
                         Intent intent = new Intent(getContext(), CourseDescription.class);
                         intent.putExtra("Course", (Parcelable) crs);
                         startActivity(intent);
                     }
+
+                    @Override
+                    public void onEnrollClick(View view, int position) {
+                        crs = courseList.get(position);
+                        Log.v(TAG, crs.getCourseID());
+                        FirebaseDatabase.getInstance().getReference()
+                                .child(getString(R.string.USERS)).child(user.getUid())
+                                .child("enrolledCourses").child(crs.getCourseID()).setValue(crs);
+//                        courseHolder.getEnroll().setVisibility(View.GONE);
+                    }
                 });
+                return courseHolder;
             }
         };
 
