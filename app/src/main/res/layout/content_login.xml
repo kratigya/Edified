@@ -31,7 +31,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:ems="10"
-            android:hint="E-mail Address"
+            android:hint="@string/email_address"
             android:inputType="textEmailAddress"
             android:maxLines="1" />
 
@@ -43,7 +43,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/emailadd"
             android:ems="10"
-            android:hint="Password"
+            android:hint="@string/password"
             android:inputType="textPassword"
             android:maxLines="1" />
 
@@ -56,13 +56,10 @@
 
             <Button
                 android:id="@+id/log"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/reg"
-                android:layout_alignBottom="@+id/reg"
-                android:layout_alignParentStart="true"
                 android:layout_weight="1"
-                android:text="Log In" />
+                android:text="@string/log_in" />
         </LinearLayout>
 
     </RelativeLayout>
@@ -75,27 +72,30 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/relativeLayout"
         android:layout_marginTop="66dp"
-        android:layout_weight="1"
-        android:text="Create An Account" />
+        android:text="@string/create_account" />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/reg"
-        android:layout_gravity="center"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="24dp"
-        android:visibility="visible" />
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
-    <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/fb_sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/sign_in_button"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="17dp"
-        android:visibility="visible"
-        facebook:com_facebook_login_text="Sign Up With Facebook" />
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:visibility="visible" />
+
+        <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/fb_sign_in_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="visible"
+            facebook:com_facebook_login_text="Sign Up With Facebook" />
+    </LinearLayout>
 </RelativeLayout>

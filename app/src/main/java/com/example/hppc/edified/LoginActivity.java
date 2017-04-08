@@ -92,25 +92,6 @@ public class LoginActivity extends AppCompatActivity implements FireBaseConn, Go
             }
         });
 
-//        fname = (EditText) findViewById(R.id.first_name);
-//        lname = (EditText) findViewById(R.id.last_name);
-//        email = (EditText) findViewById(R.id.email_address);
-//        passwd = (EditText) findViewById(R.id.passwd);
-//        confirm_passwd = (EditText) findViewById(R.id.confirm_password);
-//
-//        create = (Button) findViewById(R.id.create);
-//        create.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                User usr = new User();
-//                usr.setFirstName(fname.getText().toString());
-//                usr.setLastName(lname.getText().toString());
-//                usr.setEmailAddress(email.getText().toString());
-//                usr.setPassword(passwd.getText().toString());
-//            }
-//        });
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -118,6 +99,7 @@ public class LoginActivity extends AppCompatActivity implements FireBaseConn, Go
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -168,6 +150,11 @@ public class LoginActivity extends AppCompatActivity implements FireBaseConn, Go
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
+                            User newu = new User();
+                            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                            newu.setFirstName(user.getDisplayName());
+                            newu.setEmailAddress(user.getEmail());
+                            mDatabase.child("users").child(user.getUid()).setValue(newu);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }
                     }
@@ -214,6 +201,11 @@ public class LoginActivity extends AppCompatActivity implements FireBaseConn, Go
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
+                            User newu = new User();
+                            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                            newu.setFirstName(user.getDisplayName());
+                            newu.setEmailAddress(user.getEmail());
+                            mDatabase.child("users").child(user.getUid()).setValue(newu);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         }

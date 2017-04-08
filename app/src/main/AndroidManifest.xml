@@ -44,7 +44,20 @@
         <activity
             android:name=".CourseDescription"
             android:label="@string/title_activity_course_description"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".DownloadService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".UploadService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

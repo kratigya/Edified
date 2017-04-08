@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,6 +24,9 @@ public class SignupActivity extends AppCompatActivity implements FireBaseConn {
     private static final String TAG = "EmailPassword";
     private EditText fname, lname, email, passwd, confirm_passwd;
     private Button create;
+    private RadioGroup role;
+    private RadioButton radioButton;
+    private String roleName;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -40,6 +45,7 @@ public class SignupActivity extends AppCompatActivity implements FireBaseConn {
 
         create = (Button) findViewById(R.id.create);
 
+        role = (RadioGroup) findViewById(R.id.role);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -59,11 +65,13 @@ public class SignupActivity extends AppCompatActivity implements FireBaseConn {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int selectedId = role.getCheckedRadioButtonId();
+                radioButton = (RadioButton) findViewById(selectedId);
+                roleName = radioButton.getText().toString();
                 createAccount(email.getText().toString(), passwd.getText().toString());
             }
         });
     }
-
 
     void createAccount(final String email, String password) {
         Log.d(TAG, "createAccount:" + email);
@@ -83,9 +91,9 @@ public class SignupActivity extends AppCompatActivity implements FireBaseConn {
                             newu.setEmailAddress(email);
                             newu.setFirstName(fname.getText().toString());
                             newu.setLastName(lname.getText().toString());
+                            newu.setRole(roleName);
 
                             FirebaseUser user = mAuth.getCurrentUser();
-
                             mDatabase.child("users").child(user.getUid()).setValue(newu);
 
                             Intent intent = new Intent(SignupActivity.this, MainActivity.class);

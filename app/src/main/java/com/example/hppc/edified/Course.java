@@ -1,12 +1,28 @@
 package com.example.hppc.edified;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by hppc on 02-Jan-17.
  */
 
-public class Course implements FireBaseConn {
+public class Course implements FireBaseConn, Parcelable, Serializable {
 
-    private String courseID, courseName, courseCategory, courseDesc;
+    public static final Creator<Course> CREATOR = new Creator<Course>() {
+        @Override
+        public Course createFromParcel(Parcel in) {
+            return new Course(in);
+        }
+
+        @Override
+        public Course[] newArray(int size) {
+            return new Course[size];
+        }
+    };
+    private String courseID, courseName, courseCategory, courseDesc, courseBook;
     private String COURSE_CHILD = "courses";
 
     Course() {
@@ -17,6 +33,15 @@ public class Course implements FireBaseConn {
         courseName = name;
         courseCategory = category;
         courseDesc = desc;
+    }
+
+    protected Course(Parcel in) {
+        courseID = in.readString();
+        courseName = in.readString();
+        courseCategory = in.readString();
+        courseDesc = in.readString();
+        courseBook = in.readString();
+        COURSE_CHILD = in.readString();
     }
 
     public void addCourse() {
@@ -53,5 +78,27 @@ public class Course implements FireBaseConn {
 
     public void setCourseDesc(String courseDesc) {
         this.courseDesc = courseDesc;
+    }
+
+    public String getCourseBook() {
+        return courseBook;
+    }
+
+    public void setCourseBook(String courseBook) {
+        this.courseBook = courseBook;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(courseID);
+        dest.writeString(courseName);
+        dest.writeString(courseCategory);
+        dest.writeString(courseDesc);
+        dest.writeString(courseBook);
     }
 }

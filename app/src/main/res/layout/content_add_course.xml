@@ -15,43 +15,43 @@
 
 
     <EditText
+        android:id="@+id/courseName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:hint = "Course Name"
-        android:ems="10"
-        android:layout_marginTop="83dp"
-        android:id="@+id/courseName"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="83dp"
+        android:ems="10"
+        android:hint="@string/course_name"
+        android:inputType="textPersonName" />
 
     <Spinner
+        android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/courseName"
         android:layout_alignParentStart="true"
-        android:id="@+id/spinner" />
+        android:layout_below="@+id/courseName" />
 
     <EditText
+        android:id="@+id/courseDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:hint="Course Description"
-        android:ems="10"
-        android:id="@+id/courseDesc"
-        android:layout_below="@+id/spinner"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_below="@+id/spinner"
+        android:ems="10"
+        android:hint="@string/course_description"
+        android:inputType="textPersonName" />
 
     <Button
-        android:text="Add"
+        android:id="@+id/addButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/courseDesc"
         android:layout_alignParentEnd="true"
+        android:layout_below="@+id/courseDesc"
         android:layout_marginTop="49dp"
-        android:id="@+id/addButton" />
+        android:text="@string/add" />
 
 
 </RelativeLayout>

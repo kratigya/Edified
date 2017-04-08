@@ -41,4 +41,27 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_course_description">CourseDescription</string>
+    <string name="progress_downloading">Downloading…</string>
+    <string name="progress_uploading">Uploading…</string>
+    <string name="progress_auth">Signing In…</string>
+
+    <string name="upload_success">Upload finished</string>
+    <string name="upload_failure">Upload failed</string>
+    <string name="success">Success</string>
+    <string name="download_success">Download finished</string>
+    <string name="download_failure">Download failure</string>
+    <string name="USERS">users</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="password">Password</string>
+    <string name="email_address">Email Address</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="create_account">Create Account</string>
+    <string name="student">Student</string>
+    <string name="faculty">Faculty</string>
+    <string name="course_name">Course Name</string>
+    <string name="course_description">Course Description</string>
+    <string name="add">Add</string>
+    <string name="course_book">Course Book</string>
+    <string name="log_in">Log In</string>
 </resources>

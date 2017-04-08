@@ -19,7 +19,7 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.hppc.edified",
-            "certificate_hash": "E4D45C8E40E4264D8F9266F077979B7208F6F288"
+            "certificate_hash": "e4d45c8e40e4264d8f9266f077979b7208f6f288"
           }
         },
         {
@@ -27,7 +27,7 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.hppc.edified",
-            "certificate_hash": "EBDAD7E8C44024A916C0E6E96B6C8D7FD7A41014"
+            "certificate_hash": "ebdad7e8c44024a916c0e6e96b6c8d7fd7a41014"
           }
         },
         {
