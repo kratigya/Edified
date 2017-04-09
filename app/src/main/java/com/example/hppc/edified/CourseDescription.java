@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,9 +25,11 @@ public class CourseDescription extends AppCompatActivity {
     private static final String KEY_FILE_URI = "key_file_uri";
     private static final String KEY_DOWNLOAD_URL = "key_download_url";
     private Button courseBook;
+    private TextView category, descrip;
     private String TAG = "CourseDescription";
     private Uri mDownloadUrl = null;
     private FirebaseAuth mAuth;
+    private Course crs;
 
     private BroadcastReceiver mBroadcastReceiver;
     private ProgressDialog mProgressDialog;
@@ -39,7 +42,11 @@ public class CourseDescription extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
-        Course crs = intent.getExtras().getParcelable("Course");
+        crs = intent.getExtras().getParcelable("Course");
+        category = (TextView) findViewById(R.id.category);
+        descrip = (TextView) findViewById(R.id.description);
+        category.setText(crs.getCourseCategory());
+        descrip.setText(crs.getCourseDesc());
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -93,7 +100,7 @@ public class CourseDescription extends AppCompatActivity {
 
     private void beginDownload() {
         // Get path
-        String path = "https://firebasestorage.googleapis.com/v0/b/edified-a3504.appspot.com/o/Concurrent%20Programming%20in%20Java%20Design%20Principles%20and%20Pattern%20-%20Addison%20Wesley.pdf?alt=media&token=380f3224-57e5-4291-b4fc-0cf071f41774";
+        String path = crs.getCourseBook();
 
         // Kick off MyDownloadService to download the file
         Intent intent = new Intent(this, DownloadService.class)

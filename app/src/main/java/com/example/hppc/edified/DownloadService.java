@@ -2,6 +2,7 @@ package com.example.hppc.edified;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,12 +11,11 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StreamDownloadTask;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.File;
 
 public class DownloadService extends MyService {
     /**
@@ -45,7 +45,6 @@ public class DownloadService extends MyService {
         super.onCreate();
 
         // Initialize Storage
-        mStorageRef = FirebaseStorage.getInstance().getReference();
     }
 
     @Nullable
@@ -69,61 +68,96 @@ public class DownloadService extends MyService {
 
     private void downloadFromPath(final String downloadPath) {
         Log.d(TAG, "downloadFromPath:" + downloadPath);
+        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl(downloadPath);
+
+        File rootPath = new File(Environment.getExternalStorageDirectory(), "edified");
+        if (!rootPath.exists()) {
+            rootPath.mkdirs();
+        }
+
+        final File localFile = new File(rootPath, "book.pdf");
 
         // Mark task started
         taskStarted();
         showProgressNotification(getString(R.string.progress_downloading), 0, 0);
 
-        // Download and get total bytes
-        mStorageRef.child(downloadPath).getStream(
-                new StreamDownloadTask.StreamProcessor() {
-                    @SuppressWarnings("VisibleForTests")
-                    @Override
-                    public void doInBackground(StreamDownloadTask.TaskSnapshot taskSnapshot,
-                                               InputStream inputStream) throws IOException {
-                        long totalBytes = taskSnapshot.getTotalByteCount();
-                        long bytesDownloaded = 0;
+        mStorageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @SuppressWarnings("VisibleForTests")
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                Log.d(TAG, "download:SUCCESS");
 
-                        byte[] buffer = new byte[1024];
-                        int size;
+                // Send success broadcast with number of bytes downloaded
+                broadcastDownloadFinished(downloadPath, taskSnapshot.getTotalByteCount());
+                showDownloadFinishedNotification(downloadPath, (int) taskSnapshot.getTotalByteCount());
 
-                        while ((size = inputStream.read(buffer)) != -1) {
-                            bytesDownloaded += size;
-                            showProgressNotification(getString(R.string.progress_downloading),
-                                    bytesDownloaded, totalBytes);
-                        }
+                // Mark task completed
+                taskCompleted();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "download:FAILURE", e);
 
-                        // Close the stream at the end of the Task
-                        inputStream.close();
-                    }
-                })
-                .addOnSuccessListener(new OnSuccessListener<StreamDownloadTask.TaskSnapshot>() {
-                    @SuppressWarnings("VisibleForTests")
-                    @Override
-                    public void onSuccess(StreamDownloadTask.TaskSnapshot taskSnapshot) {
-                        Log.d(TAG, "download:SUCCESS");
+                // Send failure broadcast
+                broadcastDownloadFinished(downloadPath, -1);
+                showDownloadFinishedNotification(downloadPath, -1);
 
-                        // Send success broadcast with number of bytes downloaded
-                        broadcastDownloadFinished(downloadPath, taskSnapshot.getTotalByteCount());
-                        showDownloadFinishedNotification(downloadPath, (int) taskSnapshot.getTotalByteCount());
+                // Mark task completed
+                taskCompleted();
+            }
+        });
 
-                        // Mark task completed
-                        taskCompleted();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.w(TAG, "download:FAILURE", exception);
-
-                        // Send failure broadcast
-                        broadcastDownloadFinished(downloadPath, -1);
-                        showDownloadFinishedNotification(downloadPath, -1);
-
-                        // Mark task completed
-                        taskCompleted();
-                    }
-                });
+//        // Download and get total bytes
+//        mStorageRef.child(downloadPath).getStream(
+//                new StreamDownloadTask.StreamProcessor() {
+//                    @SuppressWarnings("VisibleForTests")
+//                    @Override
+//                    public void doInBackground(StreamDownloadTask.TaskSnapshot taskSnapshot,
+//                                               InputStream inputStream) throws IOException {
+//                        long totalBytes = taskSnapshot.getTotalByteCount();
+//                        long bytesDownloaded = 0;
+//
+//                        byte[] buffer = new byte[1024];
+//                        int size;
+//
+//                        while ((size = inputStream.read(buffer)) != -1) {
+//                            bytesDownloaded += size;
+//                            showProgressNotification(getString(R.string.progress_downloading),
+//                                    bytesDownloaded, totalBytes);
+//                        }
+//
+//                        // Close the stream at the end of the Task
+//                        inputStream.close();
+//                    }
+//                })
+//                .addOnSuccessListener(new OnSuccessListener<StreamDownloadTask.TaskSnapshot>() {
+//                    @SuppressWarnings("VisibleForTests")
+//                    @Override
+//                    public void onSuccess(StreamDownloadTask.TaskSnapshot taskSnapshot) {
+//                        Log.d(TAG, "download:SUCCESS");
+//
+//                        // Send success broadcast with number of bytes downloaded
+//                        broadcastDownloadFinished(downloadPath, taskSnapshot.getTotalByteCount());
+//                        showDownloadFinishedNotification(downloadPath, (int) taskSnapshot.getTotalByteCount());
+//
+//                        // Mark task completed
+//                        taskCompleted();
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception exception) {
+//                        Log.w(TAG, "download:FAILURE", exception);
+//
+//                        // Send failure broadcast
+//                        broadcastDownloadFinished(downloadPath, -1);
+//                        showDownloadFinishedNotification(downloadPath, -1);
+//
+//                        // Mark task completed
+//                        taskCompleted();
+//                    }
+//                });
     }
 
     /**
