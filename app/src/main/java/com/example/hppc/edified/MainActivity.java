@@ -58,9 +58,9 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        Fragment courseFragment = new CourseFragment();
+        Fragment enrolledCourseFragment = new EnrolledCourseFragment();
         transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment1, courseFragment, "Courses");
+        transaction.replace(R.id.fragment1, enrolledCourseFragment, "Courses");
         transaction.commit();
 
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, LoginActivity.class));
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -119,13 +118,13 @@ public class MainActivity extends AppCompatActivity
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-        if (id == R.id.courses) {
+        if (id == R.id.dashboard) {
             // Handle the camera action
+            Fragment enrollFragment = new EnrolledCourseFragment();
+            fragmentTransaction.replace(R.id.fragment1, enrollFragment, "Courses");
+        } else if (id == R.id.courses) {
             Fragment courseFragment = new CourseFragment();
-            fragmentTransaction.replace(R.id.fragment1, courseFragment, "Courses");
-
-        } else if (id == R.id.nav_gallery) {
-
+            fragmentTransaction.replace(R.id.fragment1, courseFragment, "Dashboard");
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

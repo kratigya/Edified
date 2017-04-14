@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by hppc on 02-Jan-17.
@@ -22,8 +23,14 @@ public class Course implements FireBaseConn, Parcelable, Serializable {
             return new Course[size];
         }
     };
-    private String courseID, courseName, courseCategory, courseDesc, courseBook;
+    private String courseID;
+    private String courseName;
+    private String courseCategory;
+    private String courseDesc;
+    private String courseBook;
     private String COURSE_CHILD = "courses";
+    private User faculty;
+    private ArrayList<String> quizes = new ArrayList<>();
 
     Course() {
 
@@ -42,6 +49,7 @@ public class Course implements FireBaseConn, Parcelable, Serializable {
         courseDesc = in.readString();
         courseBook = in.readString();
         COURSE_CHILD = in.readString();
+        faculty = (User) in.readSerializable();
     }
 
     public void addCourse() {
@@ -88,6 +96,14 @@ public class Course implements FireBaseConn, Parcelable, Serializable {
         this.courseBook = courseBook;
     }
 
+    public User getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(User faculty) {
+        this.faculty = faculty;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -100,5 +116,6 @@ public class Course implements FireBaseConn, Parcelable, Serializable {
         dest.writeString(courseCategory);
         dest.writeString(courseDesc);
         dest.writeString(courseBook);
+        dest.writeSerializable(faculty);
     }
 }

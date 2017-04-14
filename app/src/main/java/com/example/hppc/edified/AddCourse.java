@@ -11,11 +11,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-public class AddCourse extends AppCompatActivity {
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+public class AddCourse extends AppCompatActivity implements FireBaseConn {
 
     private static final String TAG = "AddCourse";
     String item = "", nm, des;
-    private EditText name, desc;
+    FirebaseUser user = mAuth.getCurrentUser();
+    private EditText name;
+    private EditText desc;
     private Spinner spinner;
     private Button addBtn;
 
@@ -49,16 +56,30 @@ public class AddCourse extends AppCompatActivity {
             }
         });
 
+
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 nm = name.getText().toString();
                 des = desc.getText().toString();
-                Course course = new Course(nm, item, des);
-                course.addCourse();
 
-                Intent intent = new Intent(AddCourse.this, MainActivity.class);
-                startActivity(intent);
+                mDatabase.child(getString(R.string.USERS)).child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        Course course = new Course(nm, item, des);
+                        course.setFaculty(user);
+                        course.addCourse();
+
+                        Intent intent = new Intent(AddCourse.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
     }

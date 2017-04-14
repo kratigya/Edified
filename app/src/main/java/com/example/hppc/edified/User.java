@@ -1,14 +1,18 @@
 package com.example.hppc.edified;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by hppc on 04-Jan-17.
  */
 
-public class User {
+class User implements Serializable {
 
-    private String firstName, lastName, emailAddress, role;
+    private String firstName;
+    private String lastName;
+    private String emailAddress;
+    private String role;
     private HashMap<String, Course> enrolledCourses = new HashMap<>();
 
     User() {

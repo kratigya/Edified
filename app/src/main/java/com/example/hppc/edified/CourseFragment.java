@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,7 +18,6 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -36,11 +34,8 @@ public class CourseFragment extends Fragment implements FireBaseConn {
     private RecyclerView courseRecyclerView;
     private RecyclerView.LayoutManager courseLayoutManager;
     private FirebaseRecyclerAdapter<Course, CourseHolder> courseAdapter;
-    private FragmentTransaction fragmentTransaction;
     private Course crs;
     private FloatingActionButton fab;
-    private DatabaseReference mUserReference;
-    private ValueEventListener mUserListener;
     private User usr;
     private String role;
     private ArrayList<Course> courseList = new ArrayList<>();
@@ -94,7 +89,7 @@ public class CourseFragment extends Fragment implements FireBaseConn {
                 User user = dataSnapshot.getValue(User.class);
                 role = user.getRole();
                 Log.v(TAG, role);
-                if (role.equals(R.string.faculty)) {
+                if (role.equalsIgnoreCase(getString(R.string.faculty))) {
                     fab.show();
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
