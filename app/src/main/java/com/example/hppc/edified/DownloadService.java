@@ -29,6 +29,7 @@ public class DownloadService extends MyService {
      **/
     public static final String EXTRA_DOWNLOAD_PATH = "extra_download_path";
     public static final String EXTRA_BYTES_DOWNLOADED = "extra_bytes_downloaded";
+    public static final String EXTRA_FILE_PATH = "filepath";
     private static final String TAG = "Storage#DownloadService";
     private StorageReference mStorageRef;
 
@@ -168,10 +169,15 @@ public class DownloadService extends MyService {
     private boolean broadcastDownloadFinished(String downloadPath, long bytesDownloaded) {
         boolean success = bytesDownloaded != -1;
         String action = success ? DOWNLOAD_COMPLETED : DOWNLOAD_ERROR;
+//        String filePath = Environment.getExternalStorageDirectory(Environment.DIRECTORY_EDIFIED).toString() + "/edified/" + "book.pdf";
 
+        File file = new File(Environment.getExternalStoragePublicDirectory("edified"), "book.pdf");
+        String filePath = file.getAbsolutePath();
+        Log.v(TAG, "" + file.exists());
         Intent broadcast = new Intent(action)
                 .putExtra(EXTRA_DOWNLOAD_PATH, downloadPath)
-                .putExtra(EXTRA_BYTES_DOWNLOADED, bytesDownloaded);
+                .putExtra(EXTRA_BYTES_DOWNLOADED, bytesDownloaded)
+                .putExtra(EXTRA_FILE_PATH, filePath);
         return LocalBroadcastManager.getInstance(getApplicationContext())
                 .sendBroadcast(broadcast);
     }

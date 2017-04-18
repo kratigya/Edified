@@ -1,12 +1,19 @@
 package com.example.hppc.edified;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,22 +21,26 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class CourseDescription extends AppCompatActivity {
 
     private static final String KEY_FILE_URI = "key_file_uri";
     private static final String KEY_DOWNLOAD_URL = "key_download_url";
-    private Button courseBook;
+    private Button courseBook, courseQuiz;
     private TextView category, descrip;
     private String TAG = "CourseDescription";
     private Uri mDownloadUrl = null;
     private FirebaseAuth mAuth;
     private Course crs;
+    private Activity activity;
 
     private BroadcastReceiver mBroadcastReceiver;
     private ProgressDialog mProgressDialog;
@@ -50,12 +61,29 @@ public class CourseDescription extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        activity = this;
         courseBook = (Button) findViewById(R.id.book);
 
         courseBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                beginDownload();
+
+                String[] permission = new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                };
+                if (checkPermissions(permission)) {
+                    beginDownload();
+                }
+            }
+        });
+
+        courseQuiz = (Button) findViewById(R.id.quiz);
+        courseQuiz.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent quizIntent = new Intent(CourseDescription.this, CourseQuizActivity.class);
+                startActivity(quizIntent);
             }
         });
 
@@ -80,6 +108,23 @@ public class CourseDescription extends AppCompatActivity {
                                 "%d bytes downloaded from %s",
                                 numBytes,
                                 intent.getStringExtra(DownloadService.EXTRA_DOWNLOAD_PATH)));
+
+                        String filename = intent.getStringExtra(DownloadService.EXTRA_FILE_PATH);
+
+//                        File file = new File(Environment.getExternalStoragePublicDirectory("edified") , "book.pdf");
+
+                        File pdfPath = new File(Environment.getExternalStorageDirectory(), "edified");
+                        File pdfFile = new File(pdfPath, "book.pdf");
+
+                        Uri uri = FileProvider.getUriForFile(CourseDescription.this, BuildConfig.APPLICATION_ID + ".provider", pdfFile);
+                        try {
+                            Intent intentBook = new Intent(Intent.ACTION_VIEW);
+                            intentBook.setDataAndType(uri, "application/pdf");
+                            intentBook.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            activity.startActivity(intentBook);
+                        } catch (ActivityNotFoundException e) {
+                            Toast.makeText(activity, "No pdf viewer installed", Toast.LENGTH_LONG).show();
+                        }
                         break;
                     case DownloadService.DOWNLOAD_ERROR:
                         // Alert failure
@@ -90,6 +135,33 @@ public class CourseDescription extends AppCompatActivity {
                 }
             }
         };
+    }
+
+    private boolean checkPermissions(String[] permission) {
+        int result;
+        ArrayList<String> listPermissionsNeeded = new ArrayList<>();
+        for (String p : permission) {
+            result = ContextCompat.checkSelfPermission(this, p);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p);
+            }
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 100);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == 100) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                beginDownload();
+            }
+            return;
+        }
     }
 
     @Override

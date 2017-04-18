@@ -32,6 +32,9 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity implements FireBaseConn, GoogleApiClient.OnConnectionFailedListener {
 
@@ -149,15 +152,35 @@ public class LoginActivity extends AppCompatActivity implements FireBaseConn, Go
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            User newu = new User();
+
                             FirebaseUser user = mFirebaseAuth.getCurrentUser();
-                            newu.setFirstName(user.getDisplayName());
-                            newu.setEmailAddress(user.getEmail());
-                            mDatabase.child("users").child(user.getUid()).setValue(newu);
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            mDatabase.child("user").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    } else {
+                                        addNewUser();
+                                        startActivity(new Intent(LoginActivity.this, ChooseRole.class));
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
                         }
                     }
                 });
+    }
+
+    private void addNewUser() {
+        FirebaseUser user = mFirebaseAuth.getCurrentUser();
+        User newu = new User();
+        newu.setFirstName(user.getDisplayName());
+        newu.setEmailAddress(user.getEmail());
+        mDatabase.child("users").child(user.getUid()).setValue(newu);
     }
 
     private void signInWithGoogle() {
@@ -200,12 +223,23 @@ public class LoginActivity extends AppCompatActivity implements FireBaseConn, Go
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            User newu = new User();
                             FirebaseUser user = mFirebaseAuth.getCurrentUser();
-                            newu.setFirstName(user.getDisplayName());
-                            newu.setEmailAddress(user.getEmail());
-                            mDatabase.child("users").child(user.getUid()).setValue(newu);
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            mDatabase.child("user").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    } else {
+                                        addNewUser();
+                                        startActivity(new Intent(LoginActivity.this, ChooseRole.class));
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
                             finish();
                         }
                     }

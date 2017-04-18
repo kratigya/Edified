@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Created by hppc on 02-Jan-17.
  */
 
-public class Course implements FireBaseConn, Parcelable, Serializable {
+public class Course implements FireBaseConn, Serializable, Parcelable {
 
     public static final Creator<Course> CREATOR = new Creator<Course>() {
         @Override
@@ -30,7 +30,7 @@ public class Course implements FireBaseConn, Parcelable, Serializable {
     private String courseBook;
     private String COURSE_CHILD = "courses";
     private User faculty;
-    private ArrayList<String> quizes = new ArrayList<>();
+    private ArrayList<String> quizzes = new ArrayList<>();
 
     Course() {
 
@@ -49,7 +49,7 @@ public class Course implements FireBaseConn, Parcelable, Serializable {
         courseDesc = in.readString();
         courseBook = in.readString();
         COURSE_CHILD = in.readString();
-        faculty = (User) in.readSerializable();
+        quizzes = in.createStringArrayList();
     }
 
     public void addCourse() {
@@ -104,6 +104,14 @@ public class Course implements FireBaseConn, Parcelable, Serializable {
         this.faculty = faculty;
     }
 
+    public ArrayList<String> getQuizzes() {
+        return quizzes;
+    }
+
+    public void setQuizzes(ArrayList<String> quizzes) {
+        this.quizzes = quizzes;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -116,6 +124,7 @@ public class Course implements FireBaseConn, Parcelable, Serializable {
         dest.writeString(courseCategory);
         dest.writeString(courseDesc);
         dest.writeString(courseBook);
-        dest.writeSerializable(faculty);
+        dest.writeString(COURSE_CHILD);
+        dest.writeStringList(quizzes);
     }
 }

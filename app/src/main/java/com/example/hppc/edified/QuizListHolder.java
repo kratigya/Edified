@@ -9,12 +9,12 @@ import android.widget.TextView;
  * Created by hppc on 05-Jan-17.
  */
 
-public class QuizHolder extends RecyclerView.ViewHolder {
+public class QuizListHolder extends RecyclerView.ViewHolder {
 
     TextView quizNo, score;
     ImageView image;
 
-    public QuizHolder(View itemView) {
+    public QuizListHolder(View itemView) {
         super(itemView);
 
         quizNo = (TextView) itemView.findViewById(R.id.quiz_num);
