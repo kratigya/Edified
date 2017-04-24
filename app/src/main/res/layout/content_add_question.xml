@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.hppc.edified.AddQuestion"
+    tools:showIn="@layout/activity_add_question">
+
+    <TextView
+        android:id="@+id/a"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/option2"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/option1"
+        android:gravity="center"
+        android:text="(A)" />
+
+    <TextView
+        android:id="@+id/b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/c"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/a"
+        android:gravity="center"
+        android:text="(B)" />
+
+    <TextView
+        android:id="@+id/c"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/option4"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/option2"
+        android:gravity="center"
+        android:text="(C)" />
+
+    <TextView
+        android:id="@+id/d"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/correct"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/c"
+        android:gravity="center"
+        android:text="(D)" />
+
+    <EditText
+        android:id="@+id/question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="40dp"
+        android:ems="10"
+        android:hint="Question" />
+
+    <EditText
+        android:id="@+id/option1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/question"
+        android:layout_marginTop="40dp"
+        android:layout_toEndOf="@+id/b"
+        android:ems="10"
+        android:hint="option1"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/option2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/option1"
+        android:layout_toEndOf="@+id/a"
+        android:ems="10"
+        android:hint="option2"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/option3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignStart="@+id/option2"
+        android:layout_below="@+id/option2"
+        android:ems="10"
+        android:hint="option3"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/option4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignStart="@+id/option3"
+        android:layout_below="@+id/option3"
+        android:ems="10"
+        android:hint="option4"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/correct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/option4"
+        android:layout_marginTop="40dp"
+        android:ems="10"
+        android:hint="correct option"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/addAnother"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/correct"
+        android:layout_marginTop="26dp"
+        android:text="Add Another" />
+
+    <Button
+        android:id="@+id/done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/addAnother"
+        android:layout_alignParentStart="true"
+        android:text="Done" />
+
+</RelativeLayout>

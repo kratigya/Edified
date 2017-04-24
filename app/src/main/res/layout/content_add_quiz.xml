@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,4 +8,25 @@
     tools:context="com.example.hppc.edified.AddQuiz"
     tools:showIn="@layout/activity_add_quiz">
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/addQues"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="125dp"
+        android:text="Add Question" />
+
+    <EditText
+        android:id="@+id/quizName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/addQues"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="127dp"
+        android:ems="10"
+        android:hint="Quiz Name"
+        android:inputType="textPersonName" />
+
+</RelativeLayout>

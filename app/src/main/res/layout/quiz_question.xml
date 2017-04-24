@@ -48,7 +48,7 @@
     </RadioGroup>
 
     <Button
-        android:id="@+id/submit"
+        android:id="@+id/done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

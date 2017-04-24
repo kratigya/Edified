@@ -20,6 +20,20 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_course_quiz" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_course_quiz" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="top|left"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_plus"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="bottom|right" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -26,6 +26,10 @@ public class Quiz implements Serializable, Parcelable {
     private String quizName, score, quizID;
     private ArrayList<Question> questionArrayList;
 
+    Quiz() {
+
+    }
+
     protected Quiz(Parcel in) {
         quizName = in.readString();
         score = in.readString();

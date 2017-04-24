@@ -2,27 +2,35 @@ package com.example.hppc.edified;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CourseQuizActivity extends AppCompatActivity implements FireBaseConn {
 
+    private static final String TAG = "CourseQuizActivity";
     private RecyclerView quizRecyclerView;
     private RecyclerView.Adapter quizAdapter;
     private RecyclerView.LayoutManager quizLayoutManager;
     private ArrayList<Quiz> quizList;
     private Quiz qz;
     private ArrayList<Question> quesList;
+    private FloatingActionButton addFab;
+    private Course crs;
+    private HashMap<String, String> map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,47 +39,43 @@ public class CourseQuizActivity extends AppCompatActivity implements FireBaseCon
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        crs = getIntent().getExtras().getParcelable("course");
+        quizList = new ArrayList<>();
+
         quizRecyclerView = (RecyclerView) findViewById(R.id.quizRecView);
         quizRecyclerView.setHasFixedSize(true);
         quizLayoutManager = new LinearLayoutManager(this);
         quizRecyclerView.setLayoutManager(quizLayoutManager);
 
-        quizAdapter = new FirebaseRecyclerAdapter<Quiz, QuizListHolder>(
-                Quiz.class,
-                R.layout.quiz_card,
-                QuizListHolder.class,
-                mDatabase.child("courses").child("quizzes")) {
-
+        addFab = (FloatingActionButton) findViewById(R.id.addFab);
+        addFab.setOnClickListener(new View.OnClickListener() {
             @Override
-            protected Quiz parseSnapshot(DataSnapshot snapshot) {
-                Quiz quiz = super.parseSnapshot(snapshot);
-                if (quiz != null) {
-                    quiz.setQuizID(snapshot.getKey());
+            public void onClick(View v) {
+                Intent intent = new Intent(CourseQuizActivity.this, AddQuiz.class);
+                intent.putExtra("course", (Parcelable) crs);
+                startActivity(intent);
+            }
+        });
+
+        map = crs.getQuizzes();
+
+        for (Object o : map.entrySet()) {
+            Map.Entry pair = (Map.Entry) o;
+            mDatabase.child("quizzes").child(pair.getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Quiz quiz = dataSnapshot.getValue(Quiz.class);
+                    Log.v(TAG, quiz.getQuizName());
                     quizList.add(quiz);
+                    quizAdapter = new QuizListAdapter(quizList);
+                    quizRecyclerView.setAdapter(quizAdapter);
                 }
-                return quiz;
-            }
 
-            @Override
-            protected void populateViewHolder(QuizListHolder viewHolder, Quiz model, int position) {
-                qz = quizList.get(position);
-                quesList = qz.getQuestionArrayList();
-                viewHolder.getQuizNo().setText(qz.getQuizName());
-                viewHolder.getScore().setText(qz.getScore());
-                ColorGenerator generator = ColorGenerator.MATERIAL;
-                int color = generator.getRandomColor();
-                TextDrawable drawable = TextDrawable.builder().buildRound("Q" + (position + 1), color);
-                viewHolder.getImage().setImageDrawable(drawable);
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(CourseQuizActivity.this, QuizActivity.class);
-                        intent.putParcelableArrayListExtra("questionList", quesList);
-                        startActivity(intent);
-                    }
-                });
-            }
-        };
-        quizRecyclerView.setAdapter(quizAdapter);
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 }

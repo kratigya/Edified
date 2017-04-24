@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -83,6 +84,7 @@ public class CourseDescription extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent quizIntent = new Intent(CourseDescription.this, CourseQuizActivity.class);
+                quizIntent.putExtra("course", (Parcelable) crs);
                 startActivity(quizIntent);
             }
         });

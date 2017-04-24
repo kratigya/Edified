@@ -39,7 +39,7 @@ public class AddCourse extends AppCompatActivity implements FireBaseConn {
         spinner = (Spinner) findViewById(R.id.spinner);
         addBtn = (Button) findViewById(R.id.addButton);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.categories,
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.categories,
                 android.R.layout.simple_spinner_item);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -55,7 +55,6 @@ public class AddCourse extends AppCompatActivity implements FireBaseConn {
 
             }
         });
-
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override

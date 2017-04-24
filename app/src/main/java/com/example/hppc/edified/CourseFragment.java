@@ -1,5 +1,6 @@
 package com.example.hppc.edified;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -39,6 +40,7 @@ public class CourseFragment extends Fragment implements FireBaseConn {
     private User usr;
     private String role;
     private ArrayList<Course> courseList = new ArrayList<>();
+    private ProgressDialog progress;
 
 //    private OnFragmentInteractionListener mListener;
 
@@ -81,6 +83,12 @@ public class CourseFragment extends Fragment implements FireBaseConn {
         courseRecyclerView.setLayoutManager(courseLayoutManager);
         fab = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
         fab.hide();
+
+        progress = new ProgressDialog(view.getContext());
+        progress.setMessage("Loading...");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setIndeterminate(true);
+        progress.show();
 
         FirebaseDatabase.getInstance().getReference()
                 .child(getString(R.string.USERS)).child(user.getUid()).addValueEventListener(new ValueEventListener() {
@@ -125,7 +133,7 @@ public class CourseFragment extends Fragment implements FireBaseConn {
 
             @Override
             protected void populateViewHolder(CourseHolder viewHolder, Course model, int position) {
-
+                progress.dismiss();
                 viewHolder.getCourse_name().setText(model.getCourseName());
                 viewHolder.getCourse_category().setText(model.getCourseCategory());
             }

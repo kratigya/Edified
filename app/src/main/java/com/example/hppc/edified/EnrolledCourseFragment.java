@@ -1,5 +1,6 @@
 package com.example.hppc.edified;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ public class EnrolledCourseFragment extends Fragment implements FireBaseConn {
     private FirebaseRecyclerAdapter<Course, CourseHolder> enrolledCourseAdapter;
     private ArrayList<Course> enrolledCourseList = new ArrayList<>();
     private Course crs;
+    private ProgressDialog progress;
 
     public EnrolledCourseFragment() {
         // Required empty public constructor
@@ -45,6 +47,12 @@ public class EnrolledCourseFragment extends Fragment implements FireBaseConn {
         enrolledCourseLayoutManager = new LinearLayoutManager(getActivity());
         enrolledCourseRecView.setLayoutManager(enrolledCourseLayoutManager);
 
+        progress = new ProgressDialog(view.getContext());
+        progress.setMessage("Loading...");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setIndeterminate(true);
+        progress.show();
+
         enrolledCourseAdapter = new FirebaseRecyclerAdapter<Course, CourseHolder>(
                 Course.class,
                 R.layout.course_card,
@@ -63,7 +71,7 @@ public class EnrolledCourseFragment extends Fragment implements FireBaseConn {
 
             @Override
             protected void populateViewHolder(CourseHolder viewHolder, Course model, int position) {
-
+                progress.dismiss();
                 viewHolder.getCourse_name().setText(model.getCourseName());
                 viewHolder.getCourse_category().setText(model.getCourseCategory());
                 viewHolder.getEnroll().setVisibility(View.GONE);

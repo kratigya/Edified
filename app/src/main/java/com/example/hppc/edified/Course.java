@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by hppc on 02-Jan-17.
@@ -30,7 +30,7 @@ public class Course implements FireBaseConn, Serializable, Parcelable {
     private String courseBook;
     private String COURSE_CHILD = "courses";
     private User faculty;
-    private ArrayList<String> quizzes = new ArrayList<>();
+    private HashMap<String, String> quizzes = new HashMap<>();
 
     Course() {
 
@@ -49,7 +49,23 @@ public class Course implements FireBaseConn, Serializable, Parcelable {
         courseDesc = in.readString();
         courseBook = in.readString();
         COURSE_CHILD = in.readString();
-        quizzes = in.createStringArrayList();
+        quizzes = in.readHashMap(String.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(courseID);
+        dest.writeString(courseName);
+        dest.writeString(courseCategory);
+        dest.writeString(courseDesc);
+        dest.writeString(courseBook);
+        dest.writeString(COURSE_CHILD);
+        dest.writeMap(quizzes);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public void addCourse() {
@@ -104,27 +120,11 @@ public class Course implements FireBaseConn, Serializable, Parcelable {
         this.faculty = faculty;
     }
 
-    public ArrayList<String> getQuizzes() {
+    public HashMap<String, String> getQuizzes() {
         return quizzes;
     }
 
-    public void setQuizzes(ArrayList<String> quizzes) {
+    public void setQuizzes(HashMap<String, String> quizzes) {
         this.quizzes = quizzes;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(courseID);
-        dest.writeString(courseName);
-        dest.writeString(courseCategory);
-        dest.writeString(courseDesc);
-        dest.writeString(courseBook);
-        dest.writeString(COURSE_CHILD);
-        dest.writeStringList(quizzes);
     }
 }
