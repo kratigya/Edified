@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by hppc on 12-Apr-17.
@@ -24,12 +25,28 @@ public class Question implements Serializable, Parcelable {
     };
     private String ques;
     private String answer;
-    private String options[] = new String[4];
+    private ArrayList<String> options = new ArrayList<>();
+
+    Question() {
+
+    }
 
     protected Question(Parcel in) {
         ques = in.readString();
         answer = in.readString();
-        options = in.createStringArray();
+        options = in.createStringArrayList();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(ques);
+        dest.writeString(answer);
+        dest.writeStringList(options);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public String getQues() {
@@ -40,11 +57,11 @@ public class Question implements Serializable, Parcelable {
         this.ques = ques;
     }
 
-    public String[] getOptions() {
+    public ArrayList<String> getOptions() {
         return options;
     }
 
-    public void setOptions(String[] options) {
+    public void setOptions(ArrayList<String> options) {
         this.options = options;
     }
 
@@ -54,17 +71,5 @@ public class Question implements Serializable, Parcelable {
 
     public void setAnswer(String answer) {
         this.answer = answer;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(ques);
-        dest.writeString(answer);
-        dest.writeStringArray(options);
     }
 }

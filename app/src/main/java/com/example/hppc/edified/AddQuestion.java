@@ -8,14 +8,17 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AddQuestion extends AppCompatActivity implements FireBaseConn {
 
+    private static final String TAG = "AddQuestion";
+    int count;
     private EditText ques, opt1, opt2, opt3, opt4, ans;
     private Button submit, another;
     private Question newQues;
-    private String[] options;
-    private ArrayList<Question> questionArrayList;
+    private ArrayList<String> options;
+    private HashMap<String, Question> questionHashMap;
     private Quiz quiz;
     private Course crs;
 
@@ -27,10 +30,11 @@ public class AddQuestion extends AppCompatActivity implements FireBaseConn {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        count = 0;
         quiz = getIntent().getExtras().getParcelable("quiz");
         crs = getIntent().getExtras().getParcelable("course");
 
-        questionArrayList = new ArrayList<>();
+        questionHashMap = new HashMap<>();
         ques = (EditText) findViewById(R.id.question);
         opt1 = (EditText) findViewById(R.id.option1);
         opt2 = (EditText) findViewById(R.id.option2);
@@ -44,26 +48,17 @@ public class AddQuestion extends AppCompatActivity implements FireBaseConn {
         another.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newQues.setQues(ques.getText().toString());
-                options = new String[4];
-                options[1] = opt1.getText().toString();
-                options[2] = opt2.getText().toString();
-                options[3] = opt3.getText().toString();
-                options[4] = opt4.getText().toString();
-                newQues.setOptions(options);
-                newQues.setAnswer(ans.getText().toString());
-                questionArrayList.add(newQues);
-                quiz.setQuestionArrayList(questionArrayList);
-                resetViews();
+                addQuestion();
             }
         });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                addQuestion();
+                quiz.setQuesCount(count);
                 String key = mDatabase.child("quizzes").push().getKey();
                 mDatabase.child("quizzes").child(key).setValue(quiz);
-                mDatabase.child("courses").child(crs.getCourseID()).child("quizzes").child(key).child("questionList").setValue(questionArrayList);
                 mDatabase.child("courses").child(crs.getCourseID()).child("quizzes").child(key).setValue(key);
             }
         });
@@ -76,6 +71,21 @@ public class AddQuestion extends AppCompatActivity implements FireBaseConn {
 //                        .setAction("Action", null).show();
 //            }
 //        });
+    }
+
+    private void addQuestion() {
+        newQues = new Question();
+        newQues.setQues(ques.getText().toString());
+        options = new ArrayList<>();
+        options.add(opt1.getText().toString());
+        options.add(opt2.getText().toString());
+        options.add(opt3.getText().toString());
+        options.add(opt4.getText().toString());
+        newQues.setOptions(options);
+        newQues.setAnswer(ans.getText().toString());
+        questionHashMap.put("ID" + ++count, newQues);
+        quiz.setQuestionMap(questionHashMap);
+        resetViews();
     }
 
     private void resetViews() {

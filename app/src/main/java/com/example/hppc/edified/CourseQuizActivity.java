@@ -1,5 +1,6 @@
 package com.example.hppc.edified;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -17,7 +18,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class CourseQuizActivity extends AppCompatActivity implements FireBaseConn {
 
@@ -26,11 +26,11 @@ public class CourseQuizActivity extends AppCompatActivity implements FireBaseCon
     private RecyclerView.Adapter quizAdapter;
     private RecyclerView.LayoutManager quizLayoutManager;
     private ArrayList<Quiz> quizList;
-    private Quiz qz;
-    private ArrayList<Question> quesList;
+    private ArrayList<String> courseQuiz;
     private FloatingActionButton addFab;
     private Course crs;
     private HashMap<String, String> map;
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,7 @@ public class CourseQuizActivity extends AppCompatActivity implements FireBaseCon
 
         crs = getIntent().getExtras().getParcelable("course");
         quizList = new ArrayList<>();
+        courseQuiz = new ArrayList<>();
 
         quizRecyclerView = (RecyclerView) findViewById(R.id.quizRecView);
         quizRecyclerView.setHasFixedSize(true);
@@ -57,25 +58,50 @@ public class CourseQuizActivity extends AppCompatActivity implements FireBaseCon
             }
         });
 
-        map = crs.getQuizzes();
+        progress = new ProgressDialog(this);
+        progress.setMessage("Loading...");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setIndeterminate(true);
+        progress.show();
 
-        for (Object o : map.entrySet()) {
-            Map.Entry pair = (Map.Entry) o;
-            mDatabase.child("quizzes").child(pair.getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Quiz quiz = dataSnapshot.getValue(Quiz.class);
-                    Log.v(TAG, quiz.getQuizName());
-                    quizList.add(quiz);
-                    quizAdapter = new QuizListAdapter(quizList);
-                    quizRecyclerView.setAdapter(quizAdapter);
+        mDatabase.child("courses").child(crs.getCourseID()).child("quizzes").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        String key = postSnapshot.getValue().toString();
+                        Log.v(TAG, key + " id");
+//                    courseQuiz.add(key);
+                        mDatabase.child("quizzes").child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Quiz quiz = dataSnapshot.getValue(Quiz.class);
+                                //Log.v(TAG, quiz.getQuizName());
+                                quizList.add(quiz);
+                                quizAdapter = new QuizListAdapter(quizList);
+                                quizRecyclerView.setAdapter(quizAdapter);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
                 }
+                progress.dismiss();
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
-        }
+            }
+        });
+
+        Log.v(TAG, "Hiiii");
+//        for (String key : courseQuiz) {
+//            Log.v(TAG,key+ " key");
+//
+//        }
     }
 }

@@ -10,6 +10,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by hppc on 24-Apr-17.
@@ -20,6 +21,7 @@ public class QuizListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private ArrayList<Quiz> quizList;
     private Quiz qz;
     private ArrayList<Question> quesList;
+    private HashMap<String, Question> map;
 
     public QuizListAdapter(ArrayList<Quiz> quizList) {
         this.quizList = quizList;
@@ -39,7 +41,7 @@ public class QuizListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         QuizListHolder vh = (QuizListHolder) holder;
         qz = quizList.get(position);
-        quesList = qz.getQuestionArrayList();
+        map = qz.getQuestionMap();
         vh.getQuizNo().setText(qz.getQuizName());
         vh.getScore().setText(qz.getScore());
         ColorGenerator generator = ColorGenerator.MATERIAL;
@@ -49,12 +51,13 @@ public class QuizListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         vh.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                quesList = new ArrayList<>(map.values());
                 Intent intent = new Intent(v.getContext(), QuizActivity.class);
                 intent.putParcelableArrayListExtra("questionList", quesList);
+                intent.putExtra("quesCount", qz.getQuesCount());
                 v.getContext().startActivity(intent);
             }
         });
-
     }
 
     @Override

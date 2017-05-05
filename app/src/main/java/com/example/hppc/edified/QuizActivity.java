@@ -5,14 +5,17 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterViewFlipper;
 
 import java.util.ArrayList;
 
 public class QuizActivity extends AppCompatActivity {
+    private static final String TAG = "QuizActivity";
     private ArrayList<Question> questionArrayList;
     private QuizAdapter quizAdapter;
+    private int size, prevno;
     private AdapterViewFlipper adapterViewFlipper;
 
     @Override
@@ -24,6 +27,8 @@ public class QuizActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         questionArrayList = intent.getParcelableArrayListExtra("questionList");
+        size = intent.getExtras().getInt("quesCount");
+        prevno = -1;
 
         quizAdapter = new QuizAdapter(questionArrayList);
 
@@ -34,6 +39,11 @@ public class QuizActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int displayedChild = adapterViewFlipper.getDisplayedChild();
+                if (displayedChild == size - 1) {
+                    Log.v(TAG, "Hellooo results");
+                    adapterViewFlipper.stopFlipping();
+                }
                 adapterViewFlipper.showNext();
             }
         });

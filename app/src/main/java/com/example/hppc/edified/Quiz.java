@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by hppc on 05-Jan-17.
@@ -24,7 +24,8 @@ public class Quiz implements Serializable, Parcelable {
         }
     };
     private String quizName, score, quizID;
-    private ArrayList<Question> questionArrayList;
+    private int quesCount;
+    private HashMap<String, Question> questionMap;
 
     Quiz() {
 
@@ -34,7 +35,8 @@ public class Quiz implements Serializable, Parcelable {
         quizName = in.readString();
         score = in.readString();
         quizID = in.readString();
-        questionArrayList = in.createTypedArrayList(Question.CREATOR);
+        quesCount = in.readInt();
+        questionMap = in.readHashMap(Question.class.getClassLoader());
     }
 
     public String getQuizName() {
@@ -53,12 +55,12 @@ public class Quiz implements Serializable, Parcelable {
         this.score = score;
     }
 
-    public ArrayList<Question> getQuestionArrayList() {
-        return questionArrayList;
+    public HashMap<String, Question> getQuestionMap() {
+        return questionMap;
     }
 
-    public void setQuestionArrayList(ArrayList<Question> questionArrayList) {
-        this.questionArrayList = questionArrayList;
+    public void setQuestionMap(HashMap<String, Question> questionMap) {
+        this.questionMap = questionMap;
     }
 
     public String getQuizID() {
@@ -79,6 +81,15 @@ public class Quiz implements Serializable, Parcelable {
         dest.writeString(quizName);
         dest.writeString(score);
         dest.writeString(quizID);
-        dest.writeTypedList(questionArrayList);
+        dest.writeInt(quesCount);
+        dest.writeMap(questionMap);
+    }
+
+    public int getQuesCount() {
+        return quesCount;
+    }
+
+    public void setQuesCount(int quesCount) {
+        this.quesCount = quesCount;
     }
 }

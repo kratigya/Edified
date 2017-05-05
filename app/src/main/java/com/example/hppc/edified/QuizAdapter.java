@@ -53,10 +53,10 @@ public class QuizAdapter extends BaseAdapter {
         op3 = (RadioButton) v.findViewById(R.id.op3);
         op4 = (RadioButton) v.findViewById(R.id.op4);
         question.setText(questions.get(position).getQues());
-        op1.setText(questions.get(position).getOptions()[0]);
-        op2.setText(questions.get(position).getOptions()[1]);
-        op3.setText(questions.get(position).getOptions()[2]);
-        op4.setText(questions.get(position).getOptions()[3]);
+        op1.setText(questions.get(position).getOptions().get(0));
+        op2.setText(questions.get(position).getOptions().get(1));
+        op3.setText(questions.get(position).getOptions().get(2));
+        op4.setText(questions.get(position).getOptions().get(3));
 
         return v;
     }
