@@ -1,5 +1,7 @@
 package com.example.hppc.edified;
 
+import android.support.annotation.IdRes;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,11 @@ public class QuizAdapter extends BaseAdapter {
     private RadioButton radioButton, op1, op2, op3, op4;
     private Button submit;
     private ArrayList<Question> questions;
+    private FloatingActionButton fab;
+    private ArrayList<String> answer = new ArrayList<>();
+    private ArrayList<String> correct = new ArrayList<>();
+    private ArrayList<Integer> res = new ArrayList<>();
+    private View v;
 
     QuizAdapter(ArrayList<Question> questions) {
         this.questions = questions;
@@ -43,9 +50,9 @@ public class QuizAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.quiz_question, parent, false);
+        v = inflater.inflate(R.layout.quiz_question, parent, false);
         question = (TextView) v.findViewById(R.id.ques);
         option = (RadioGroup) v.findViewById(R.id.optionRadio);
         op1 = (RadioButton) v.findViewById(R.id.op1);
@@ -58,6 +65,49 @@ public class QuizAdapter extends BaseAdapter {
         op3.setText(questions.get(position).getOptions().get(2));
         op4.setText(questions.get(position).getOptions().get(3));
 
+        option.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                radioButton = (RadioButton) v.findViewById(checkedId);
+                String str = "";
+                switch (checkedId) {
+                    case R.id.op1:
+                        str = "A";
+                        break;
+                    case R.id.op2:
+                        str = "B";
+                        break;
+                    case R.id.op3:
+                        str = "C";
+                        break;
+                    case R.id.op4:
+                        str = "D";
+                        break;
+                }
+
+                answer.add(str);
+                String temp = questions.get(position).getAnswer();
+                correct.add(temp);
+                if (str.equalsIgnoreCase(temp)) {
+                    res.add(1);
+                } else {
+                    res.add(0);
+                }
+            }
+        });
+
         return v;
+    }
+
+    public ArrayList<Integer> getRes() {
+        return res;
+    }
+
+    public ArrayList<String> getAnswer() {
+        return answer;
+    }
+
+    public ArrayList<String> getCorrect() {
+        return correct;
     }
 }

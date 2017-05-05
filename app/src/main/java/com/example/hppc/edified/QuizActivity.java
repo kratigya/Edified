@@ -15,8 +15,10 @@ public class QuizActivity extends AppCompatActivity {
     private static final String TAG = "QuizActivity";
     private ArrayList<Question> questionArrayList;
     private QuizAdapter quizAdapter;
-    private int size, prevno;
+    private int size;
     private AdapterViewFlipper adapterViewFlipper;
+    private ArrayList<String> answer, correct;
+    private ArrayList<Integer> res;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +30,6 @@ public class QuizActivity extends AppCompatActivity {
         Intent intent = getIntent();
         questionArrayList = intent.getParcelableArrayListExtra("questionList");
         size = intent.getExtras().getInt("quesCount");
-        prevno = -1;
 
         quizAdapter = new QuizAdapter(questionArrayList);
 
@@ -42,11 +43,18 @@ public class QuizActivity extends AppCompatActivity {
                 int displayedChild = adapterViewFlipper.getDisplayedChild();
                 if (displayedChild == size - 1) {
                     Log.v(TAG, "Hellooo results");
-                    adapterViewFlipper.stopFlipping();
+                    res = quizAdapter.getRes();
+                    answer = quizAdapter.getAnswer();
+                    correct = quizAdapter.getCorrect();
+                    Intent intent = new Intent(QuizActivity.this, Results.class);
+                    intent.putStringArrayListExtra("answer", answer);
+                    intent.putIntegerArrayListExtra("result", res);
+                    intent.putStringArrayListExtra("correct", correct);
+                    intent.putExtra("count", size);
+                    startActivity(intent);
                 }
                 adapterViewFlipper.showNext();
             }
         });
     }
-
 }

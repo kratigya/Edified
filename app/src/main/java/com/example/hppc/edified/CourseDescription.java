@@ -121,7 +121,7 @@ public class CourseDescription extends AppCompatActivity {
                         Uri uri = FileProvider.getUriForFile(CourseDescription.this, BuildConfig.APPLICATION_ID + ".provider", pdfFile);
                         try {
                             Intent intentBook = new Intent(Intent.ACTION_VIEW);
-                            intentBook.setDataAndType(uri, "application/pdf");
+                            intentBook.setDataAndType(Uri.parse(pdfFile.toString()), "application/pdf");
                             intentBook.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             activity.startActivity(intentBook);
                         } catch (ActivityNotFoundException e) {

@@ -46,16 +46,4 @@
             android:text="Option 4" />
 
     </RadioGroup>
-
-    <Button
-        android:id="@+id/done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/optionRadio"
-        android:layout_marginEnd="15dp"
-        android:layout_marginTop="82dp"
-        android:text="Submit" />
-
-
 </RelativeLayout>
