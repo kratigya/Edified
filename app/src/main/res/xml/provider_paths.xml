@@ -2,5 +2,5 @@
 <paths>
     <external-path
         name="edified"
-        path="." />
+        path="edified/" />
 </paths>

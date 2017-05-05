@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class CourseDescription extends AppCompatActivity {
@@ -118,12 +120,15 @@ public class CourseDescription extends AppCompatActivity {
                         File pdfPath = new File(Environment.getExternalStorageDirectory(), "edified");
                         File pdfFile = new File(pdfPath, "book.pdf");
 
-                        Uri uri = FileProvider.getUriForFile(CourseDescription.this, BuildConfig.APPLICATION_ID + ".provider", pdfFile);
                         try {
+                            Uri uri = FileProvider.getUriForFile(context, "com.mydomain.fileprovider", pdfFile);
+
                             Intent intentBook = new Intent(Intent.ACTION_VIEW);
-                            intentBook.setDataAndType(Uri.parse(pdfFile.toString()), "application/pdf");
+                            intentBook.setDataAndType(uri, "application/pdf");
+                            intentBook.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             intentBook.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            activity.startActivity(intentBook);
+                            grantAllUriPermission(context, intentBook, uri);
+                            startActivity(intentBook);
                         } catch (ActivityNotFoundException e) {
                             Toast.makeText(activity, "No pdf viewer installed", Toast.LENGTH_LONG).show();
                         }
@@ -137,6 +142,15 @@ public class CourseDescription extends AppCompatActivity {
                 }
             }
         };
+    }
+
+    private void grantAllUriPermission(Context context, Intent intentBook, Uri uri) {
+        List<ResolveInfo> resInfoList = context.getPackageManager().queryIntentActivities(intentBook, PackageManager.MATCH_DEFAULT_ONLY);
+        for (ResolveInfo resolveInfo : resInfoList) {
+            String packageName = resolveInfo.activityInfo.packageName;
+            context.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+
     }
 
     private boolean checkPermissions(String[] permission) {
