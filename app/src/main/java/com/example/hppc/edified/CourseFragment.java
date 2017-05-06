@@ -94,8 +94,8 @@ public class CourseFragment extends Fragment implements FireBaseConn {
                 .child(getString(R.string.USERS)).child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                role = user.getRole();
+                usr = dataSnapshot.getValue(User.class);
+                role = usr.getRole();
                 Log.v(TAG, role);
                 if (role.equalsIgnoreCase(getString(R.string.faculty))) {
                     fab.show();
@@ -136,6 +136,9 @@ public class CourseFragment extends Fragment implements FireBaseConn {
                 progress.dismiss();
                 viewHolder.getCourse_name().setText(model.getCourseName());
                 viewHolder.getCourse_category().setText(model.getCourseCategory());
+                if (usr.getEnrolledCourses().containsKey(model.getCourseID())) {
+                    viewHolder.getEnroll().setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -147,6 +150,7 @@ public class CourseFragment extends Fragment implements FireBaseConn {
                         crs = courseList.get(position);
                         Intent intent = new Intent(getContext(), CourseDescription.class);
                         intent.putExtra("Course", (Parcelable) crs);
+                        intent.putExtra("User", (Parcelable) usr);
                         startActivity(intent);
                     }
 

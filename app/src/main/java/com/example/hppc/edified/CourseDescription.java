@@ -43,6 +43,7 @@ public class CourseDescription extends AppCompatActivity {
     private Uri mDownloadUrl = null;
     private FirebaseAuth mAuth;
     private Course crs;
+    private User usr;
     private Activity activity;
 
     private BroadcastReceiver mBroadcastReceiver;
@@ -57,6 +58,7 @@ public class CourseDescription extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
         crs = intent.getExtras().getParcelable("Course");
+        usr = intent.getExtras().getParcelable("User");
         category = (TextView) findViewById(R.id.category);
         descrip = (TextView) findViewById(R.id.description);
         category.setText(crs.getCourseCategory());
@@ -66,6 +68,12 @@ public class CourseDescription extends AppCompatActivity {
 
         activity = this;
         courseBook = (Button) findViewById(R.id.book);
+        courseQuiz = (Button) findViewById(R.id.quiz);
+
+        if (!usr.getEnrolledCourses().containsKey(crs.getCourseID())) {
+            courseBook.setEnabled(false);
+            courseQuiz.setEnabled(false);
+        }
 
         courseBook.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +89,6 @@ public class CourseDescription extends AppCompatActivity {
             }
         });
 
-        courseQuiz = (Button) findViewById(R.id.quiz);
         courseQuiz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,12 +120,13 @@ public class CourseDescription extends AppCompatActivity {
                                 numBytes,
                                 intent.getStringExtra(DownloadService.EXTRA_DOWNLOAD_PATH)));
 
-                        String filename = intent.getStringExtra(DownloadService.EXTRA_FILE_PATH);
+                        String filepath = intent.getStringExtra(DownloadService.EXTRA_FILE_PATH);
+                        String filename = intent.getStringExtra(DownloadService.EXTRA_FILE_NAME);
 
 //                        File file = new File(Environment.getExternalStoragePublicDirectory("edified") , "book.pdf");
 
                         File pdfPath = new File(Environment.getExternalStorageDirectory(), "edified");
-                        File pdfFile = new File(pdfPath, "book.pdf");
+                        File pdfFile = new File(pdfPath, filename);
 
                         try {
                             Uri uri = FileProvider.getUriForFile(context, "com.mydomain.fileprovider", pdfFile);
@@ -189,10 +197,12 @@ public class CourseDescription extends AppCompatActivity {
     private void beginDownload() {
         // Get path
         String path = crs.getCourseBook();
+        String name = crs.getCourseID() + ".pdf";
 
         // Kick off MyDownloadService to download the file
         Intent intent = new Intent(this, DownloadService.class)
                 .putExtra(DownloadService.EXTRA_DOWNLOAD_PATH, path)
+                .putExtra(DownloadService.EXTRA_FILE_NAME, name)
                 .setAction(DownloadService.ACTION_DOWNLOAD);
         startService(intent);
 

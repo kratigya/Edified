@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,7 @@ public class EnrolledCourseFragment extends Fragment implements FireBaseConn {
     private FirebaseRecyclerAdapter<Course, CourseHolder> enrolledCourseAdapter;
     private ArrayList<Course> enrolledCourseList = new ArrayList<>();
     private Course crs;
+    private User usr;
     private ProgressDialog progress;
 
     public EnrolledCourseFragment() {
@@ -53,6 +56,18 @@ public class EnrolledCourseFragment extends Fragment implements FireBaseConn {
         progress.setIndeterminate(true);
         progress.show();
 
+        mDatabase.child("users").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                usr = dataSnapshot.getValue(User.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         enrolledCourseAdapter = new FirebaseRecyclerAdapter<Course, CourseHolder>(
                 Course.class,
                 R.layout.course_card,
@@ -62,6 +77,7 @@ public class EnrolledCourseFragment extends Fragment implements FireBaseConn {
             @Override
             protected Course parseSnapshot(DataSnapshot snapshot) {
                 Course course = super.parseSnapshot(snapshot);
+                progress.dismiss();
                 if (course != null) {
                     course.setCourseID(snapshot.getKey());
                     enrolledCourseList.add(course);
@@ -86,6 +102,7 @@ public class EnrolledCourseFragment extends Fragment implements FireBaseConn {
                         crs = enrolledCourseList.get(position);
                         Intent intent = new Intent(getContext(), CourseDescription.class);
                         intent.putExtra("Course", (Parcelable) crs);
+                        intent.putExtra("User", (Parcelable) usr);
                         startActivity(intent);
                     }
 

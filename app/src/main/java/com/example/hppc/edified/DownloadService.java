@@ -30,6 +30,7 @@ public class DownloadService extends MyService {
     public static final String EXTRA_DOWNLOAD_PATH = "extra_download_path";
     public static final String EXTRA_BYTES_DOWNLOADED = "extra_bytes_downloaded";
     public static final String EXTRA_FILE_PATH = "filepath";
+    public static final String EXTRA_FILE_NAME = "extra_file_name";
     private static final String TAG = "Storage#DownloadService";
     private StorageReference mStorageRef;
 
@@ -61,13 +62,14 @@ public class DownloadService extends MyService {
         if (ACTION_DOWNLOAD.equals(intent.getAction())) {
             // Get the path to download from the intent
             String downloadPath = intent.getStringExtra(EXTRA_DOWNLOAD_PATH);
-            downloadFromPath(downloadPath);
+            String filename = intent.getStringExtra(EXTRA_FILE_NAME);
+            downloadFromPath(downloadPath, filename);
         }
 
         return START_REDELIVER_INTENT;
     }
 
-    private void downloadFromPath(final String downloadPath) {
+    private void downloadFromPath(final String downloadPath, final String fname) {
         Log.d(TAG, "downloadFromPath:" + downloadPath);
         mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl(downloadPath);
 
@@ -76,7 +78,7 @@ public class DownloadService extends MyService {
             rootPath.mkdirs();
         }
 
-        final File localFile = new File(rootPath, "book.pdf");
+        final File localFile = new File(rootPath, fname);
 
         // Mark task started
         taskStarted();
@@ -89,7 +91,7 @@ public class DownloadService extends MyService {
                 Log.d(TAG, "download:SUCCESS");
 
                 // Send success broadcast with number of bytes downloaded
-                broadcastDownloadFinished(downloadPath, taskSnapshot.getTotalByteCount());
+                broadcastDownloadFinished(downloadPath, taskSnapshot.getTotalByteCount(), fname);
                 showDownloadFinishedNotification(downloadPath, (int) taskSnapshot.getTotalByteCount());
 
                 // Mark task completed
@@ -101,7 +103,7 @@ public class DownloadService extends MyService {
                 Log.w(TAG, "download:FAILURE", e);
 
                 // Send failure broadcast
-                broadcastDownloadFinished(downloadPath, -1);
+                broadcastDownloadFinished(downloadPath, -1, "");
                 showDownloadFinishedNotification(downloadPath, -1);
 
                 // Mark task completed
@@ -166,18 +168,19 @@ public class DownloadService extends MyService {
      *
      * @return true if a running receiver received the broadcast.
      */
-    private boolean broadcastDownloadFinished(String downloadPath, long bytesDownloaded) {
+    private boolean broadcastDownloadFinished(String downloadPath, long bytesDownloaded, String fname) {
         boolean success = bytesDownloaded != -1;
         String action = success ? DOWNLOAD_COMPLETED : DOWNLOAD_ERROR;
 //        String filePath = Environment.getExternalStorageDirectory(Environment.DIRECTORY_EDIFIED).toString() + "/edified/" + "book.pdf";
 
-        File file = new File(Environment.getExternalStoragePublicDirectory("edified"), "book.pdf");
+        File file = new File(Environment.getExternalStoragePublicDirectory("edified"), fname);
         String filePath = file.getAbsolutePath();
         Log.v(TAG, "" + file.exists());
         Intent broadcast = new Intent(action)
                 .putExtra(EXTRA_DOWNLOAD_PATH, downloadPath)
                 .putExtra(EXTRA_BYTES_DOWNLOADED, bytesDownloaded)
-                .putExtra(EXTRA_FILE_PATH, filePath);
+                .putExtra(EXTRA_FILE_PATH, filePath)
+                .putExtra(EXTRA_FILE_NAME, fname);
         return LocalBroadcastManager.getInstance(getApplicationContext())
                 .sendBroadcast(broadcast);
     }
